@@ -6,8 +6,14 @@
 //
 
 import SwiftUI
+internal import Combine
 
 struct ContentView: View {
+    @State private var timeRemaining = 90
+    @State private var isRunning = false
+    
+    private let startingTime = 90
+    
     var body: some View {
         VStack(spacing: 24) {
             Text("ROUND 1 · PICK 1")
@@ -21,7 +27,7 @@ struct ContentView: View {
             Text("TEAM 1")
                 .font(.system(size: 64, weight: .bold))
             
-            Text("1:30")
+            Text(formattedTime)
                 .font(.system(size: 96, weight: .bold, design: .monospaced))
             
             Text("Next: Team 2")
@@ -41,12 +47,46 @@ struct ContentView: View {
                
             }
             
-            Button("Pause Timer") {
-                // Add functionality later
+            HStack(spacing: 24) {
+                Button(isRunning ? "Pause Timer" : "Start Timer") {
+                    isRunning.toggle()
+                }
+                .buttonStyle(.borderedProminent)
+                
+                Button("Reset Timer") {
+                    resetTimer()
+                }
+                .buttonStyle(.bordered)
             }
-            .buttonStyle(.bordered)
+            
         }
         .padding(40)
+        .onReceive(
+            Timer.publish(every: 1, on: .main, in: .common).autoconnect()
+        ) { _ in
+            guard isRunning, timeRemaining > 0 else {
+                return
+            }
+            
+            timeRemaining -= 1
+            
+            if timeRemaining == 0 {
+                isRunning = false
+            }
+            
+        }
+    }
+    
+    private var formattedTime: String {
+        let minutes = timeRemaining / 60
+        let seconds = timeRemaining % 60
+        
+        return String(format: "%d:%02d", minutes, seconds)
+    }
+    
+    private func resetTimer() {
+        timeRemaining = startingTime
+        isRunning = false
     }
 }
 
