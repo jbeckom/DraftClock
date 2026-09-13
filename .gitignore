@@ -1,0 +1,35 @@
+# macOS
+.DS_Store
+
+# Xcode - User-specific settings
+xcuserdata/
+*.xcuserstate
+
+# Xcode - Build output
+build/
+DerivedData/
+
+# Swift Package Manager
+.build/
+.swiftpm/
+
+# Xcode playgrounds
+timeline.xctimeline
+playground.xcworkspace
+
+# Xcode generated archives
+*.xcarchive
+
+# Debug symbols
+*.dSYM
+*.dSYM.zip
+
+# Environment / secrets
+.env
+.env.*
+!.env.example
+
+# Temporary files
+*.tmp
+*.swp
+*~
