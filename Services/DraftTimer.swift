@@ -20,7 +20,7 @@ final class DraftTimer {
     private var endDate: Date?
     private var tickerTask: Task<Void, Never>?
     
-    init(startingTime: Int = 5) {
+    init(startingTime: Int = 90) {
         self.startingTime = startingTime
         self.timeRemaining = startingTime
     }

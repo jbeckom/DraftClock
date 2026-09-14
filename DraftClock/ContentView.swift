@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-internal import Combine
+//internal import Combine
 
 struct ContentView: View {
     @State private var draftTimer = DraftTimer()
