@@ -24,21 +24,31 @@ struct DraftEngineTests {
         #expect(engine.currentRound == 1)
         #expect(engine.pickInRound == 1)
         #expect(engine.currentTeamNumber == 1)
+        #expect(engine.currentTeamName == "Team 1")
+        #expect(engine.nextTeamName == "Team 2")
         
         engine.advance()
         #expect(engine.currentTeamNumber == 2)
+        #expect(engine.currentTeamName == "Team 2")
+        #expect(engine.nextTeamName == "Team 3")
         
         engine.advance()
         #expect(engine.currentTeamNumber == 3)
+        #expect(engine.currentTeamName == "Team 3")
+        #expect(engine.nextTeamName == "Team 4")
         
         engine.advance()
         #expect(engine.currentTeamNumber == 4)
+        #expect(engine.currentTeamName == "Team 4")
+        #expect(engine.nextTeamName == "Team 4")
         
         engine.advance()
         
         #expect(engine.currentRound == 2)
         #expect(engine.pickInRound == 1)
         #expect(engine.currentTeamNumber == 4)
+        #expect(engine.currentTeamName == "Team 4")
+        #expect(engine.nextTeamName == "Team 3")
     }
     
     @Test
@@ -121,6 +131,7 @@ struct DraftEngineTests {
         #expect(engine.currentRound == 2)
         #expect(engine.pickInRound == 2)
         #expect(engine.currentTeamNumber == 1)
+        #expect(engine.nextTeamName == nil)
         
         engine.advance()
         
