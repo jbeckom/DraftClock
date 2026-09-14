@@ -10,6 +10,7 @@ internal import Combine
 
 struct ContentView: View {
     @State private var draftTimer = DraftTimer()
+    @State private var alertFeedback = AlertFeedback()
     
     var body: some View {
         VStack(spacing: 24) {
@@ -26,6 +27,14 @@ struct ContentView: View {
             
             Text(draftTimer.formattedTime)
                 .font(.system(size: 96, weight: .bold, design: .monospaced))
+                .foregroundStyle(draftTimer.isExpired ? .red : .primary)
+            
+            if draftTimer.isExpired {
+                Text ("TIME EXPIRED")
+                    .font(.title)
+                    .fontWeight(.bold)
+                    .foregroundStyle(.red)
+            }
             
             Text("Next: Team 2")
                 .font(.title2)
@@ -58,8 +67,14 @@ struct ContentView: View {
             
         }
         .padding(40)
+        .onChange(of: draftTimer.isExpired) { _, isExpired in
+            if isExpired {
+                alertFeedback.triggerExpirationFeedback()
+            }
+        }
     }
 }
+
 
 #Preview {
     ContentView()

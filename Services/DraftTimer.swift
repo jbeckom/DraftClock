@@ -13,13 +13,14 @@ import Observation
 final class DraftTimer {
     private(set) var timeRemaining: Int
     private(set) var isRunning = false
+    private(set) var isExpired = false
     
     let startingTime: Int
     
     private var endDate: Date?
     private var tickerTask: Task<Void, Never>?
     
-    init(startingTime: Int = 90) {
+    init(startingTime: Int = 5) {
         self.startingTime = startingTime
         self.timeRemaining = startingTime
     }
@@ -44,6 +45,7 @@ final class DraftTimer {
             return
         }
         
+        isExpired = false
         isRunning = true
         
         endDate = Date().addingTimeInterval(
@@ -71,6 +73,7 @@ final class DraftTimer {
         stopTicker()
         
         isRunning = false
+        isExpired = false
         endDate = nil
         timeRemaining = startingTime
     }
@@ -110,6 +113,7 @@ final class DraftTimer {
         
         if remaining == 0 {
             isRunning = false
+            isExpired = true
             self.endDate = nil
             stopTicker()
         }
