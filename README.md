@@ -1,6 +1,6 @@
 # DraftClock
 
-DraftClock is an iOS/iPadOS application designed to provdie a simple, customizable draft timer for fantasy sports and other draft-style events.
+DraftClock is an iOS/iPadOS application designed to provide a simple, customizable draft timer for fantasy sports and other draft-style events.
 
 The application is designed primarily for iPad while remaining fully functional on iPhone.
 
