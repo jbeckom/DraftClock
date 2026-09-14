@@ -15,9 +15,12 @@ struct DraftEngineTests {
     func snakeDraftAdvancesCorrectly() {
         let engine = DraftEngine(
             configuration: DraftConfiguration(
+                name: nil,
                 teamNames: ["Team 1", "Team 2", "Team 3", "Team 4"],
                 numberOfRounds: 3,
-                format: .snake
+                format: .snake,
+                defaultPickTime: 90,
+                roundTimerOverrides: [:]
             )
         )
         
@@ -55,9 +58,12 @@ struct DraftEngineTests {
     func linearDraftKeepsSameOrderEachRound() {
         let engine = DraftEngine(
             configuration: DraftConfiguration(
+                name: nil,
                 teamNames: ["Team 1", "Team 2", "Team 3", "Team 4"],
-                numberOfRounds: 2,
-                format: .linear
+                numberOfRounds: 3,
+                format: .linear,
+                defaultPickTime: 90,
+                roundTimerOverrides: [:]
             )
         )
         
@@ -75,9 +81,12 @@ struct DraftEngineTests {
     func previousMovesAcrossRoundBoundary() {
         let engine = DraftEngine(
             configuration: DraftConfiguration(
+                name: nil,
                 teamNames: ["Team 1", "Team 2", "Team 3", "Team 4"],
                 numberOfRounds: 3,
-                format: .snake
+                format: .snake,
+                defaultPickTime: 90,
+                roundTimerOverrides: [:]
             )
         )
         
@@ -100,9 +109,12 @@ struct DraftEngineTests {
     func cannotGoBackBeforeFirstPick() {
         let engine = DraftEngine(
             configuration: DraftConfiguration(
+                name: nil,
                 teamNames: ["Team 1", "Team 2", "Team 3", "Team 4"],
                 numberOfRounds: 3,
-                format: .snake
+                format: .snake,
+                defaultPickTime: 90,
+                roundTimerOverrides: [:]
             )
         )
         
@@ -117,9 +129,12 @@ struct DraftEngineTests {
     func draftStopsAtFinalPick() {
         let engine = DraftEngine(
             configuration: DraftConfiguration(
+                name: nil,
                 teamNames: ["Team 1", "Team 2"],
                 numberOfRounds: 2,
-                format: .snake
+                format: .snake,
+                defaultPickTime: 90,
+                roundTimerOverrides: [:]
             )
         )
         
@@ -137,5 +152,24 @@ struct DraftEngineTests {
         
         #expect(engine.currentRound == 2)
         #expect(engine.pickInRound == 2)
+    }
+    
+    @Test
+    func roundTimerUsesOverrideWhenAvailable() {
+        let configuration = DraftConfiguration(
+            name: nil,
+            teamNames: ["Team 1", "Team 2"],
+            numberOfRounds: 3,
+            format: .snake,
+            defaultPickTime: 90,
+            roundTimerOverrides: [
+                1: 120,
+                3: 60
+            ]
+        )
+        
+        #expect(configuration.pickTime(forRound: 1) == 120)
+        #expect(configuration.pickTime(forRound: 2) == 90)
+        #expect(configuration.pickTime(forRound: 3) == 60)
     }
 }

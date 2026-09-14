@@ -13,6 +13,7 @@ struct ContentView: View {
     @State private var alertFeedback = AlertFeedback()
     @State private var draftEngine = DraftEngine(
         configuration: DraftConfiguration(
+            name: "Test Draft",
             teamNames: [
                 "Josh",
                 "Chuck",
@@ -20,7 +21,9 @@ struct ContentView: View {
                 "Team 4"
             ],
             numberOfRounds: 3,
-            format: .snake
+            format: .snake,
+            defaultPickTime: 90,
+            roundTimerOverrides: [:]
         )
     )
     
