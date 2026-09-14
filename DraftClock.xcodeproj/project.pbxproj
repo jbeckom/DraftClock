@@ -37,6 +37,11 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
+		0303D65630583FBC000BE4D9 /* Models */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Models;
+			sourceTree = "<group>";
+		};
 		03197C0030574A52003583BA /* DraftClock */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = DraftClock;
@@ -92,6 +97,7 @@
 		03197BF530574A52003583BA = {
 			isa = PBXGroup;
 			children = (
+				0303D65630583FBC000BE4D9 /* Models */,
 				03425E7030577FC10073F53E /* Resources */,
 				03197C3830575D0D003583BA /* Services */,
 				03197C28305753A1003583BA /* README.md */,
@@ -129,6 +135,7 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
+				0303D65630583FBC000BE4D9 /* Models */,
 				03197C0030574A52003583BA /* DraftClock */,
 				03197C3830575D0D003583BA /* Services */,
 				03425E7030577FC10073F53E /* Resources */,

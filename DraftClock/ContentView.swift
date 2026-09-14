@@ -11,10 +11,16 @@ import SwiftUI
 struct ContentView: View {
     @State private var draftTimer = DraftTimer()
     @State private var alertFeedback = AlertFeedback()
+    @State private var draftEngine = DraftEngine(
+        configuration: DraftConfiguration(
+            numberOfTeams: 4,
+            numberOfRounds: 3,
+            format: .snake)
+    )
     
     var body: some View {
         VStack(spacing: 24) {
-            Text("ROUND 1 · PICK 1")
+            Text("ROUND \(draftEngine.currentRound) · PICK \(draftEngine.pickInRound)")
                 .font(.title2)
                 .foregroundStyle(.secondary)
             
@@ -22,7 +28,7 @@ struct ContentView: View {
                 .font(.largeTitle)
                 .fontWeight(.bold)
             
-            Text("TEAM 1")
+            Text("TEAM \(draftEngine.currentTeamNumber)")
                 .font(.system(size: 64, weight: .bold))
             
             Text(draftTimer.formattedTime)
@@ -36,18 +42,31 @@ struct ContentView: View {
                     .foregroundStyle(.red)
             }
             
-            Text("Next: Team 2")
-                .font(.title2)
-                .foregroundStyle(.secondary)
+            if let nextTeamNumber = draftEngine.nextTeamNumber {
+                Text("Next: Team \(nextTeamNumber)")
+                    .font(.title2)
+                    .foregroundStyle(.secondary)
+            } else {
+                Text("Final Pick")
+                    .font(.title2)
+                    .foregroundStyle(.secondary)
+            }
             
             HStack(spacing: 24) {
                 Button("Previous") {
-                    // Add funtionality later
+                    draftEngine.goBack()
+                    draftTimer.reset()
                 }
                 .buttonStyle(.bordered)
                 
-                Button("Pick Made") {
-                    // Add functionality later
+                Button("THE PICK IS IN!") {
+                    if draftEngine.isDraftComplete {
+                        draftTimer.pause()
+                    } else {
+                        draftEngine.advance()
+                        draftTimer.reset()
+                        draftTimer.start()
+                    }
                 }
                 .buttonStyle(.borderedProminent)
                
