@@ -54,6 +54,18 @@ final class DraftEngine {
         pickInRound == configuration.numberOfTeams
     }
     
+    var currentTeamName: String {
+        configuration.teamNames[currentTeamNumber - 1]
+    }
+    
+    var nextTeamName: String? {
+        guard let nextTeamNumber else {
+            return nil
+        }
+        
+        return configuration.teamNames[nextTeamNumber - 1]
+    }
+    
     func advance() {
         guard !isDraftComplete else {
             return

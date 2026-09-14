@@ -13,9 +13,15 @@ struct ContentView: View {
     @State private var alertFeedback = AlertFeedback()
     @State private var draftEngine = DraftEngine(
         configuration: DraftConfiguration(
-            numberOfTeams: 4,
+            teamNames: [
+                "Josh",
+                "Chuck",
+                "Devin",
+                "Team 4"
+            ],
             numberOfRounds: 3,
-            format: .snake)
+            format: .snake
+        )
     )
     
     var body: some View {
@@ -28,7 +34,7 @@ struct ContentView: View {
                 .font(.largeTitle)
                 .fontWeight(.bold)
             
-            Text("TEAM \(draftEngine.currentTeamNumber)")
+            Text(draftEngine.currentTeamName)
                 .font(.system(size: 64, weight: .bold))
             
             Text(draftTimer.formattedTime)
@@ -42,8 +48,8 @@ struct ContentView: View {
                     .foregroundStyle(.red)
             }
             
-            if let nextTeamNumber = draftEngine.nextTeamNumber {
-                Text("Next: Team \(nextTeamNumber)")
+            if let nextTeamName = draftEngine.nextTeamName {
+                Text("Next: \(nextTeamName)")
                     .font(.title2)
                     .foregroundStyle(.secondary)
             } else {

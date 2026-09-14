@@ -15,7 +15,7 @@ struct DraftEngineTests {
     func snakeDraftAdvancesCorrectly() {
         let engine = DraftEngine(
             configuration: DraftConfiguration(
-                numberOfTeams: 4,
+                teamNames: ["Team 1", "Team 2", "Team 3", "Team 4"],
                 numberOfRounds: 3,
                 format: .snake
             )
@@ -45,7 +45,7 @@ struct DraftEngineTests {
     func linearDraftKeepsSameOrderEachRound() {
         let engine = DraftEngine(
             configuration: DraftConfiguration(
-                numberOfTeams: 4,
+                teamNames: ["Team 1", "Team 2", "Team 3", "Team 4"],
                 numberOfRounds: 2,
                 format: .linear
             )
@@ -65,7 +65,7 @@ struct DraftEngineTests {
     func previousMovesAcrossRoundBoundary() {
         let engine = DraftEngine(
             configuration: DraftConfiguration(
-                numberOfTeams: 4,
+                teamNames: ["Team 1", "Team 2", "Team 3", "Team 4"],
                 numberOfRounds: 3,
                 format: .snake
             )
@@ -90,7 +90,7 @@ struct DraftEngineTests {
     func cannotGoBackBeforeFirstPick() {
         let engine = DraftEngine(
             configuration: DraftConfiguration(
-                numberOfTeams: 4,
+                teamNames: ["Team 1", "Team 2", "Team 3", "Team 4"],
                 numberOfRounds: 3,
                 format: .snake
             )
@@ -107,7 +107,7 @@ struct DraftEngineTests {
     func draftStopsAtFinalPick() {
         let engine = DraftEngine(
             configuration: DraftConfiguration(
-                numberOfTeams: 2,
+                teamNames: ["Team 1", "Team 2"],
                 numberOfRounds: 2,
                 format: .snake
             )

@@ -6,7 +6,11 @@
 //
 
 struct DraftConfiguration {
-    let numberOfTeams: Int
+    let teamNames: [String]
     let numberOfRounds: Int
     let format: DraftFormat
+    
+    var numberOfTeams: Int {
+        teamNames.count
+    }
 }
