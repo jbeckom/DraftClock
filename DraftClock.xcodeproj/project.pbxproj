@@ -52,6 +52,16 @@
 			path = DraftClockUITests;
 			sourceTree = "<group>";
 		};
+		03197C3830575D0D003583BA /* Services */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Services;
+			sourceTree = "<group>";
+		};
+		03425E7030577FC10073F53E /* Resources */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Resources;
+			sourceTree = "<group>";
+		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -82,6 +92,8 @@
 		03197BF530574A52003583BA = {
 			isa = PBXGroup;
 			children = (
+				03425E7030577FC10073F53E /* Resources */,
+				03197C3830575D0D003583BA /* Services */,
 				03197C28305753A1003583BA /* README.md */,
 				03197C0030574A52003583BA /* DraftClock */,
 				03197C0E30574A53003583BA /* DraftClockTests */,
@@ -118,6 +130,8 @@
 			);
 			fileSystemSynchronizedGroups = (
 				03197C0030574A52003583BA /* DraftClock */,
+				03197C3830575D0D003583BA /* Services */,
+				03425E7030577FC10073F53E /* Resources */,
 			);
 			name = DraftClock;
 			packageProductDependencies = (
@@ -406,6 +420,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = F38BGWXB3B;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -437,6 +452,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = F38BGWXB3B;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
