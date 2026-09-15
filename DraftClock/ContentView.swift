@@ -6,26 +6,29 @@
 //
 
 import SwiftUI
-//internal import Combine
 
 struct ContentView: View {
-    @State private var draftTimer = DraftTimer()
+    let configuration: DraftConfiguration
+    
+    @State private var draftEngine: DraftEngine
+    @State private var draftTimer: DraftTimer
     @State private var alertFeedback = AlertFeedback()
-    @State private var draftEngine = DraftEngine(
-        configuration: DraftConfiguration(
-            name: "Test Draft",
-            teamNames: [
-                "Josh",
-                "Chuck",
-                "Devin",
-                "Team 4"
-            ],
-            numberOfRounds: 3,
-            format: .snake,
-            defaultPickTime: 90,
-            roundTimerOverrides: [:]
+    
+    init(configuration: DraftConfiguration) {
+        self.configuration = configuration
+        
+        _draftEngine = State(
+            initialValue: DraftEngine(
+                configuration: configuration
+            )
         )
-    )
+        
+        _draftTimer = State(
+            initialValue: DraftTimer(
+                startingTime: configuration.pickTime(forRound: 1),
+            )
+        )
+    }
     
     var body: some View {
         VStack(spacing: 24) {
@@ -64,7 +67,12 @@ struct ContentView: View {
             HStack(spacing: 24) {
                 Button("Previous") {
                     draftEngine.goBack()
-                    draftTimer.reset()
+                    
+                    let roundPickTime = configuration.pickTime(
+                        forRound: draftEngine.currentRound
+                    )
+
+                    draftTimer.reset(to: roundPickTime)
                 }
                 .buttonStyle(.bordered)
                 
@@ -73,7 +81,12 @@ struct ContentView: View {
                         draftTimer.pause()
                     } else {
                         draftEngine.advance()
-                        draftTimer.reset()
+                        
+                        let roundPickTime = configuration.pickTime(
+                            forRound: draftEngine.currentRound
+                        )
+                        
+                        draftTimer.reset(to: roundPickTime)
                         draftTimer.start()
                     }
                 }
@@ -105,5 +118,20 @@ struct ContentView: View {
 
 
 #Preview {
-    ContentView()
+    ContentView(
+        configuration: DraftConfiguration(
+            name: "Preview Draft",
+            teamNames: [
+                "Team 1",
+                "Team 2",
+                "Team 3",
+                "Team 4",
+            ],
+            numberOfRounds: 3,
+            format: .snake,
+            defaultPickTime: 90,
+            roundTimerOverrides: [:]
+        )
+        
+    )
 }

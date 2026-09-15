@@ -5,7 +5,7 @@
 //  Created by Joshua Beckom on 9/14/26.
 //
 
-struct DraftConfiguration {
+struct DraftConfiguration: Hashable {
     let name: String?
     let teamNames: [String]
     let numberOfRounds: Int
