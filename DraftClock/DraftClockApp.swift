@@ -11,7 +11,7 @@ import SwiftUI
 struct DraftClockApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            DraftSetupView()
         }
     }
 }

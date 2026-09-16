@@ -6,26 +6,41 @@
 //
 
 import SwiftUI
-//internal import Combine
 
 struct ContentView: View {
-    @State private var draftTimer = DraftTimer()
+    let configuration: DraftConfiguration
+    
+    @State private var draftEngine: DraftEngine
+    @State private var draftTimer: DraftTimer
     @State private var alertFeedback = AlertFeedback()
-    @State private var draftEngine = DraftEngine(
-        configuration: DraftConfiguration(
-            teamNames: [
-                "Josh",
-                "Chuck",
-                "Devin",
-                "Team 4"
-            ],
-            numberOfRounds: 3,
-            format: .snake
+    @State private var showingEndDraftConfirmation = false
+    
+    @Environment(\.dismiss) private var dismiss
+    
+    init(configuration: DraftConfiguration) {
+        self.configuration = configuration
+        
+        _draftEngine = State(
+            initialValue: DraftEngine(
+                configuration: configuration
+            )
         )
-    )
+        
+        _draftTimer = State(
+            initialValue: DraftTimer(
+                startingTime: configuration.pickTime(forRound: 1),
+            )
+        )
+    }
     
     var body: some View {
         VStack(spacing: 24) {
+            if let draftName = configuration.name {
+                Text(draftName)
+                    .font(.title)
+                    .fontWeight(.semibold)
+            }
+            
             Text("ROUND \(draftEngine.currentRound) · PICK \(draftEngine.pickInRound)")
                 .font(.title2)
                 .foregroundStyle(.secondary)
@@ -61,7 +76,12 @@ struct ContentView: View {
             HStack(spacing: 24) {
                 Button("Previous") {
                     draftEngine.goBack()
-                    draftTimer.reset()
+                    
+                    let roundPickTime = configuration.pickTime(
+                        forRound: draftEngine.currentRound
+                    )
+
+                    draftTimer.reset(to: roundPickTime)
                 }
                 .buttonStyle(.bordered)
                 
@@ -70,7 +90,12 @@ struct ContentView: View {
                         draftTimer.pause()
                     } else {
                         draftEngine.advance()
-                        draftTimer.reset()
+                        
+                        let roundPickTime = configuration.pickTime(
+                            forRound: draftEngine.currentRound
+                        )
+                        
+                        draftTimer.reset(to: roundPickTime)
                         draftTimer.start()
                     }
                 }
@@ -91,16 +116,51 @@ struct ContentView: View {
             }
             
         }
+        .navigationBarBackButtonHidden(true)
         .padding(40)
         .onChange(of: draftTimer.isExpired) { _, isExpired in
             if isExpired {
                 alertFeedback.triggerExpirationFeedback()
             }
         }
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                Button("End Draft") {
+                    showingEndDraftConfirmation = true
+                }
+            }
+        }
+        .alert("End Draft?", isPresented: $showingEndDraftConfirmation) {
+            Button("Cancel", role: .cancel) {
+                // Nothing at the moment
+            }
+            
+            Button("End Draft", role: .destructive) {
+                draftTimer.pause()
+                dismiss()
+            }
+        } message: {
+            Text("This will end the current draft and return to setup.")
+        }
     }
 }
 
 
 #Preview {
-    ContentView()
+    ContentView(
+        configuration: DraftConfiguration(
+            name: "Preview Draft",
+            teamNames: [
+                "Team 1",
+                "Team 2",
+                "Team 3",
+                "Team 4",
+            ],
+            numberOfRounds: 3,
+            format: .snake,
+            defaultPickTime: 90,
+            roundTimerOverrides: [:]
+        )
+        
+    )
 }

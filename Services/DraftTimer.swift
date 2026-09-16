@@ -14,8 +14,7 @@ final class DraftTimer {
     private(set) var timeRemaining: Int
     private(set) var isRunning = false
     private(set) var isExpired = false
-    
-    let startingTime: Int
+    private(set) var startingTime: Int
     
     private var endDate: Date?
     private var tickerTask: Task<Void, Never>?
@@ -69,8 +68,12 @@ final class DraftTimer {
         stopTicker()
     }
     
-    func reset() {
+    func reset(to newStartingTime: Int? = nil) {
         stopTicker()
+        
+        if let newStartingTime {
+            startingTime = newStartingTime
+        }
         
         isRunning = false
         isExpired = false
