@@ -13,6 +13,9 @@ struct ContentView: View {
     @State private var draftEngine: DraftEngine
     @State private var draftTimer: DraftTimer
     @State private var alertFeedback = AlertFeedback()
+    @State private var showingEndDraftConfirmation = false
+    
+    @Environment(\.dismiss) private var dismiss
     
     init(configuration: DraftConfiguration) {
         self.configuration = configuration
@@ -119,6 +122,25 @@ struct ContentView: View {
             if isExpired {
                 alertFeedback.triggerExpirationFeedback()
             }
+        }
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                Button("End Draft") {
+                    showingEndDraftConfirmation = true
+                }
+            }
+        }
+        .alert("End Draft?", isPresented: $showingEndDraftConfirmation) {
+            Button("Cancel", role: .cancel) {
+                // Nothing at the moment
+            }
+            
+            Button("End Draft", role: .destructive) {
+                draftTimer.pause()
+                dismiss()
+            }
+        } message: {
+            Text("This will end the current draft and return to setup.")
         }
     }
 }
