@@ -113,6 +113,7 @@ struct ContentView: View {
             }
             
         }
+        .navigationBarBackButtonHidden(true)
         .padding(40)
         .onChange(of: draftTimer.isExpired) { _, isExpired in
             if isExpired {

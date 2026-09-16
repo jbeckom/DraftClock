@@ -18,6 +18,8 @@ struct DraftSetupView: View {
     @State private var roundTimerOverrides: [Int: Int] = [:]
     @State private var activeConfiguration: DraftConfiguration?
     @State private var showValidationErrors = false
+    @State private var showingStartConfirmation = false
+    @State private var pendingConfiguration: DraftConfiguration?
     
     private var normalizedTeamNames: [String] {
         teamNames.map {
@@ -153,7 +155,7 @@ struct DraftSetupView: View {
                         let trimmedName = draftName
                             .trimmingCharacters(in: .whitespacesAndNewlines)
                         
-                        activeConfiguration = DraftConfiguration(
+                        pendingConfiguration = DraftConfiguration(
                             name: trimmedName.isEmpty ? nil : trimmedName,
                             teamNames: normalizedTeamNames,
                             numberOfRounds: numberOfRounds,
@@ -163,11 +165,30 @@ struct DraftSetupView: View {
                                 ? roundTimerOverrides
                                 : [:]
                         )
+                        
+                        showingStartConfirmation = true
+                        
                     }
                     .frame(maxWidth: .infinity)
                 }
             }
             .navigationTitle("Draft Setup")
+            .alert("Start Draft?", isPresented: $showingStartConfirmation) {
+                Button("Cancel", role: .cancel) {
+                    pendingConfiguration = nil
+                }
+                
+                Button("Start Draft") {
+                    guard let configuration = pendingConfiguration else {
+                        return
+                    }
+                    
+                    activeConfiguration = configuration
+                    pendingConfiguration = nil
+                }
+            } message: {
+                Text("Once the draft begins, setup cannot be changed without ending the draft.")
+            }
             .toolbar{
                 EditButton()
             }
