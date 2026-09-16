@@ -32,6 +32,12 @@ struct ContentView: View {
     
     var body: some View {
         VStack(spacing: 24) {
+            if let draftName = configuration.name {
+                Text(draftName)
+                    .font(.title)
+                    .fontWeight(.semibold)
+            }
+            
             Text("ROUND \(draftEngine.currentRound) · PICK \(draftEngine.pickInRound)")
                 .font(.title2)
                 .foregroundStyle(.secondary)

@@ -13,10 +13,30 @@ struct DraftSetupView: View {
     @State private var numberOfRounds = 16
     @State private var draftFormat: DraftFormat = .snake
     @State private var defaultPickTime = 90
-    @State private var teamNames = (1...12).map { "Team \($0)" }
+    @State private var teamNames = Array(repeating: "", count: 12)
     @State private var customizeRoundTimers = false
     @State private var roundTimerOverrides: [Int: Int] = [:]
     @State private var activeConfiguration: DraftConfiguration?
+    @State private var showValidationErrors = false
+    
+    private var normalizedTeamNames: [String] {
+        teamNames.map {
+            $0.trimmingCharacters(in: .whitespacesAndNewlines)
+        }
+    }
+    
+    private var hasBlankTeamNames: Bool {
+        normalizedTeamNames.contains { $0.isEmpty }
+    }
+    
+    private var hasDuplicateTeamNames: Bool {
+        let names = normalizedTeamNames.map { $0.lowercased() }
+        return Set(names).count != names.count
+    }
+    
+    private var canStartDraft: Bool {
+        !hasBlankTeamNames && !hasDuplicateTeamNames
+    }
     
     var body: some View {
         NavigationStack {
@@ -108,13 +128,34 @@ struct DraftSetupView: View {
                 }
                 
                 Section {
+                    if showValidationErrors && !canStartDraft {
+                        VStack(spacing: 6) {
+                            if hasBlankTeamNames {
+                                Text("Each team nust have a name.")
+                            }
+                            
+                            if hasDuplicateTeamNames {
+                                Text("Team names must be unique.")
+                            }
+                        }
+                        .font(.callout)
+                        .foregroundStyle(.red)
+                        .frame(maxWidth: .infinity, alignment: .center)
+                        .multilineTextAlignment(.center)
+                    }
+                    
                     Button("Start Draft") {
+                        guard canStartDraft else {
+                            showValidationErrors = true
+                            return
+                        }
+                        
                         let trimmedName = draftName
                             .trimmingCharacters(in: .whitespacesAndNewlines)
                         
                         activeConfiguration = DraftConfiguration(
                             name: trimmedName.isEmpty ? nil : trimmedName,
-                            teamNames: teamNames,
+                            teamNames: normalizedTeamNames,
                             numberOfRounds: numberOfRounds,
                             format: draftFormat,
                             defaultPickTime: defaultPickTime,
@@ -140,9 +181,12 @@ struct DraftSetupView: View {
     
     private func updateTeamCount() {
         if teamNames.count < numberOfTeams {
-            for teamNumber in (teamNames.count + 1)...numberOfTeams {
-                teamNames.append("Team \(teamNumber)")
-            }
+            teamNames.append(
+                contentsOf: Array (
+                    repeating: "",
+                    count: numberOfTeams - teamNames.count
+                )
+            )
         } else if teamNames.count > numberOfTeams {
             teamNames.removeLast(teamNames.count - numberOfTeams)
         }
