@@ -53,8 +53,17 @@ struct ContentView: View {
                 .font(.system(size: 64, weight: .bold))
             
             Text(draftTimer.formattedTime)
-                .font(.system(size: 96, weight: .bold, design: .monospaced))
-                .foregroundStyle(draftTimer.isExpired ? .red : .primary)
+                .font(.system(size: 120, weight: .bold, design: .monospaced))
+                .foregroundStyle(draftTimer.isWarningPeriod || draftTimer.isExpired ? .red : .primary)
+                .animation(
+                    .easeInOut(duration: 0.2),
+                    value: draftTimer.timeRemaining
+                )
+                .opacity(
+                    draftTimer.isWarningPeriod && draftTimer.timeRemaining.isMultiple(of: 2)
+                    ? 0.35
+                    : 1.0
+                )
             
             if draftTimer.isExpired {
                 Text ("TIME EXPIRED")
@@ -123,6 +132,11 @@ struct ContentView: View {
                 alertFeedback.triggerExpirationFeedback()
             }
         }
+        .onChange(of: draftTimer.timeRemaining) {
+            if draftTimer.isWarningPeriod {
+                alertFeedback.triggerWarningFeedback()
+            }
+        }
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 Button("End Draft") {
@@ -158,7 +172,7 @@ struct ContentView: View {
             ],
             numberOfRounds: 3,
             format: .snake,
-            defaultPickTime: 90,
+            defaultPickTime: 12,
             roundTimerOverrides: [:]
         )
         

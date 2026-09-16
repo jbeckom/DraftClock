@@ -9,7 +9,7 @@ import Testing
 @testable import DraftClock
 
 @MainActor
-struct DraftClockTests {
+struct DraftTimerTests {
 
     @Test
     func resetUserOriginalStartingTime() {
@@ -42,6 +42,27 @@ struct DraftClockTests {
         
         #expect(timer.startingTime == 120)
         #expect(timer.timeRemaining == 120)
+    }
+    
+    @Test
+    func warningPeriodBeginsAtTenSeconds() {
+        let timer = DraftTimer(startingTime: 10)
+        
+        #expect(timer.isWarningPeriod)
+    }
+    
+    @Test
+    func warningPeriodDoesNotBeginAboveTenSeconds() {
+        let timer = DraftTimer(startingTime: 11)
+        
+        #expect(!timer.isWarningPeriod)
+    }
+    
+    @Test
+    func expiredTimerIsNotInWarningPeriod() {
+        let timer = DraftTimer(startingTime: 0)
+        
+        #expect(!timer.isWarningPeriod)
     }
 
 }

@@ -31,6 +31,10 @@ final class DraftTimer {
         return String(format: "%02d:%02d", minutes, seconds)
     }
     
+    var isWarningPeriod: Bool {
+        timeRemaining > 0 && timeRemaining<=10
+    }
+    
     func toggle() {
         if isRunning {
             pause()

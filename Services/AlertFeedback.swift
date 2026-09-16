@@ -13,13 +13,17 @@ final class AlertFeedback {
     private var audioPlayer: AVAudioPlayer?
     
     func triggerExpirationFeedback() {
-        playExpirationSound()
+        playSound(named: "timer-expired")
         triggerHaptic()
     }
     
-    private func playExpirationSound() {
+    func triggerWarningFeedback() {
+        playSound(named: "timer-tick")
+    }
+    
+    private func playSound(named soundName: String) {
         guard let soundURL = Bundle.main.url(
-            forResource: "timer-expired",
+            forResource: soundName,
             withExtension: "wav"
         ) else {
             print("Could not find timer-expired.wav")
