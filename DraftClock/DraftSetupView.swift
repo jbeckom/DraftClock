@@ -41,162 +41,160 @@ struct DraftSetupView: View {
     }
     
     var body: some View {
-        NavigationStack {
-            Form {
-                Section("Draft") {
-                    TextField("Draft Name (Optional)", text: $draftName)
-                    
-                    Stepper(
-                        "Teams: \(numberOfTeams)",
-                        value: $numberOfTeams,
-                        in: 2...32
-                    )
-                    .onChange(of: numberOfTeams) {
-                        updateTeamCount()
-                    }
-                    
-                    Stepper(
-                        "Rounds: \(numberOfRounds)",
-                        value: $numberOfRounds,
-                        in: 1...50
-                    )
-                    .onChange(of: numberOfRounds) {
-                        updateRoundCount()
-                    }
+        Form {
+            Section("Draft") {
+                TextField("Draft Name (Optional)", text: $draftName)
+                
+                Stepper(
+                    "Teams: \(numberOfTeams)",
+                    value: $numberOfTeams,
+                    in: 2...32
+                )
+                .onChange(of: numberOfTeams) {
+                    updateTeamCount()
                 }
                 
-                Section("Draft Format") {
-                    Picker("Format", selection: $draftFormat) {
-                        Text("Snake")
-                            .tag(DraftFormat.snake)
-                        
-                        Text("Linear")
-                            .tag(DraftFormat.linear)
-                    }
-                    .pickerStyle(.segmented)
-                }
-                
-                Section("Draft Order") {
-                    ForEach(teamNames.indices, id: \.self) { index in
-                        HStack {
-                            Text("\(index + 1)")
-                                .foregroundStyle(.secondary)
-                                .frame(width: 30)
-                            
-                            TextField(
-                                "Team \(index + 1)",
-                                text: $teamNames[index]
-                            )
-                        }
-                    }
-                    .onMove { indicies, newOffset in
-                        teamNames.move(
-                            fromOffsets: indicies,
-                            toOffset: newOffset
-                        )
-                    }
-                }
-                
-                Section("Timer") {
-                    Picker("Default Pick Time", selection: $defaultPickTime) {
-                        Text("30 seconds").tag(30)
-                        Text("45 seconds").tag(45)
-                        Text("60 seconds").tag(60)
-                        Text("90 seconds").tag(90)
-                        Text("120 seconds").tag(120)
-                    }
-                    
-                    Toggle(
-                        "Customize Timers by Round",
-                        isOn: $customizeRoundTimers
-                    )
-                    
-                    if customizeRoundTimers {
-                        Section("Round Timers") {
-                            ForEach(1...numberOfRounds, id: \.self) { round in
-                                Picker(
-                                    "Round \(round)",
-                                    selection: timerBinding(for: round)
-                                ) {
-                                    Text("30 seconds").tag(30)
-                                    Text("45 seconds").tag(45)
-                                    Text("60 seconds").tag(60)
-                                    Text("90 seconds").tag(90)
-                                    Text("120 seconds").tag(120)
-                                }
-                            }
-                        }
-                    }
-                }
-                
-                Section {
-                    if showValidationErrors && !canStartDraft {
-                        VStack(spacing: 6) {
-                            if hasBlankTeamNames {
-                                Text("Each team nust have a name.")
-                            }
-                            
-                            if hasDuplicateTeamNames {
-                                Text("Team names must be unique.")
-                            }
-                        }
-                        .font(.callout)
-                        .foregroundStyle(.red)
-                        .frame(maxWidth: .infinity, alignment: .center)
-                        .multilineTextAlignment(.center)
-                    }
-                    
-                    Button("Start Draft") {
-                        guard canStartDraft else {
-                            showValidationErrors = true
-                            return
-                        }
-                        
-                        let trimmedName = draftName
-                            .trimmingCharacters(in: .whitespacesAndNewlines)
-                        
-                        pendingConfiguration = DraftConfiguration(
-                            name: trimmedName.isEmpty ? nil : trimmedName,
-                            teamNames: normalizedTeamNames,
-                            numberOfRounds: numberOfRounds,
-                            format: draftFormat,
-                            defaultPickTime: defaultPickTime,
-                            roundTimerOverrides: customizeRoundTimers
-                                ? roundTimerOverrides
-                                : [:]
-                        )
-                        
-                        showingStartConfirmation = true
-                        
-                    }
-                    .frame(maxWidth: .infinity)
+                Stepper(
+                    "Rounds: \(numberOfRounds)",
+                    value: $numberOfRounds,
+                    in: 1...50
+                )
+                .onChange(of: numberOfRounds) {
+                    updateRoundCount()
                 }
             }
-            .navigationTitle("Draft Setup")
-            .alert("Start Draft?", isPresented: $showingStartConfirmation) {
-                Button("Cancel", role: .cancel) {
-                    pendingConfiguration = nil
+            
+            Section("Draft Format") {
+                Picker("Format", selection: $draftFormat) {
+                    Text("Snake")
+                        .tag(DraftFormat.snake)
+                    
+                    Text("Linear")
+                        .tag(DraftFormat.linear)
+                }
+                .pickerStyle(.segmented)
+            }
+            
+            Section("Draft Order") {
+                ForEach(teamNames.indices, id: \.self) { index in
+                    HStack {
+                        Text("\(index + 1)")
+                            .foregroundStyle(.secondary)
+                            .frame(width: 30)
+                        
+                        TextField(
+                            "Team \(index + 1)",
+                            text: $teamNames[index]
+                        )
+                    }
+                }
+                .onMove { indicies, newOffset in
+                    teamNames.move(
+                        fromOffsets: indicies,
+                        toOffset: newOffset
+                    )
+                }
+            }
+            
+            Section("Timer") {
+                Picker("Default Pick Time", selection: $defaultPickTime) {
+                    Text("30 seconds").tag(30)
+                    Text("45 seconds").tag(45)
+                    Text("60 seconds").tag(60)
+                    Text("90 seconds").tag(90)
+                    Text("120 seconds").tag(120)
+                }
+                
+                Toggle(
+                    "Customize Timers by Round",
+                    isOn: $customizeRoundTimers
+                )
+                
+                if customizeRoundTimers {
+                    Section("Round Timers") {
+                        ForEach(1...numberOfRounds, id: \.self) { round in
+                            Picker(
+                                "Round \(round)",
+                                selection: timerBinding(for: round)
+                            ) {
+                                Text("30 seconds").tag(30)
+                                Text("45 seconds").tag(45)
+                                Text("60 seconds").tag(60)
+                                Text("90 seconds").tag(90)
+                                Text("120 seconds").tag(120)
+                            }
+                        }
+                    }
+                }
+            }
+            
+            Section {
+                if showValidationErrors && !canStartDraft {
+                    VStack(spacing: 6) {
+                        if hasBlankTeamNames {
+                            Text("Each team must have a name.")
+                        }
+                        
+                        if hasDuplicateTeamNames {
+                            Text("Team names must be unique.")
+                        }
+                    }
+                    .font(.callout)
+                    .foregroundStyle(.red)
+                    .frame(maxWidth: .infinity, alignment: .center)
+                    .multilineTextAlignment(.center)
                 }
                 
                 Button("Start Draft") {
-                    guard let configuration = pendingConfiguration else {
+                    guard canStartDraft else {
+                        showValidationErrors = true
                         return
                     }
                     
-                    activeConfiguration = configuration
-                    pendingConfiguration = nil
+                    let trimmedName = draftName
+                        .trimmingCharacters(in: .whitespacesAndNewlines)
+                    
+                    pendingConfiguration = DraftConfiguration(
+                        name: trimmedName.isEmpty ? nil : trimmedName,
+                        teamNames: normalizedTeamNames,
+                        numberOfRounds: numberOfRounds,
+                        format: draftFormat,
+                        defaultPickTime: defaultPickTime,
+                        roundTimerOverrides: customizeRoundTimers
+                            ? roundTimerOverrides
+                            : [:]
+                    )
+                    
+                    showingStartConfirmation = true
+                    
                 }
-            } message: {
-                Text("Once the draft begins, setup cannot be changed without ending the draft.")
+                .frame(maxWidth: .infinity)
             }
-            .toolbar{
-                EditButton()
+        }
+        .navigationTitle("Draft Setup")
+        .alert("Start Draft?", isPresented: $showingStartConfirmation) {
+            Button("Cancel", role: .cancel) {
+                pendingConfiguration = nil
             }
-            .navigationDestination(
-                item: $activeConfiguration
-            ) { configuration in
-                ContentView(configuration: configuration)
+            
+            Button("Start Draft") {
+                guard let configuration = pendingConfiguration else {
+                    return
+                }
+                
+                activeConfiguration = configuration
+                pendingConfiguration = nil
             }
+        } message: {
+            Text("Once the draft begins, setup cannot be changed without ending the draft.")
+        }
+        .toolbar{
+            EditButton()
+        }
+        .navigationDestination(
+            item: $activeConfiguration
+        ) { configuration in
+            ContentView(configuration: configuration)
         }
     }
     
